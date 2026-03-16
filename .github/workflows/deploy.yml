@@ -28,7 +28,7 @@ jobs:
             git clone https://github.com/nikhilgeography-png/devops-nginx-project.git
 
             cd devops-nginx-project
-
+            docker kill $(docker ps -q) || true
             docker stop nginx-project || true
             docker rm nginx-project || true
 
