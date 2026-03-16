@@ -11,22 +11,27 @@ jobs:
 
     steps:
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_KEY }}
-        port: 22
-        script: |
-          cd /home/ec2-user
-          rm -rf devops-nginx-project
-          git clone https://github.com/nikhilgeography-png/devops-nginx-project.git
-          cd devops-nginx-project
-          docker build -t nginx-project .
-          docker stop nginx-project || true
-          docker rm nginx-project || true
-          docker run -d -p 80:80 --name nginx-project nginx-project
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          script: |
+            cd /home/ec2-user
+
+            rm -rf devops-nginx-project
+            git clone https://github.com/nikhilgeography-png/devops-nginx-project.git
+
+            cd devops-nginx-project
+
+            docker stop nginx-project || true
+            docker rm nginx-project || true
+
+            docker build -t nginx-project .
+
+            docker run -d -p 80:80 --name nginx-project nginx-project
